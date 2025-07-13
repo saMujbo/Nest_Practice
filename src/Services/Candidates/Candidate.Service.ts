@@ -9,47 +9,42 @@ import { ICandidateService } from "./Candidate.Service.Interface";
 
 @Injectable()
 export class CandidateService implements ICandidateService{
-    constructor(
-        @InjectRepository(Candidate)
-        private readonly candidateRepo: Repository<Candidate>,
-    ){}
+
+    private candidates: Candidate[] = []; // almacenamiento simulado
 
     async getAllCandidates(): Promise<Candidate[]> {
-        return await this.candidateRepo.find();
+        return await this.candidates;
     }
     async getCandidateById(id: number): Promise<Candidate> {
-        const candidate = await this.candidateRepo.findOne({
-            where:{CandidateId:id},
-            relations:['candidateSkill','candidateSkill.skill'],
-        });
+        const candidate = await this.candidates.find(c=>c.CandidateId===id);
         if(!candidate){
-                throw new NotFoundException(`Candidate with id ${id} not found`);
+            throw new NotFoundException(`Candidate with id ${id} not found`);
         }
-        return candidate; 
+        return candidate;
     }
     async getOffersByCandidate(id: number): Promise <Offer[]> {
-        const candidate = await this.candidateRepo.findOne({
-            where:{CandidateId:id},
-            relations:['candidateOffers','candidateOffers.offer'],
-        });
+        const candidate = await this.getCandidateById(id);
         return candidate?.candidateOffers?.map(co => co.offer)||[];
     }
     async getSkillsByCandidate(id: number): Promise<Skills[]> {
-        const candidate = await this.candidateRepo.findOne({
-            where:{CandidateId:id},
-            relations: ['candidateSkill','candidateSkill.skill'],
-        });
+        const candidate = await this.getCandidateById(id);
         return candidate?.candidateSkill?.map(cs=>cs.skill)||[];
     }
     async addCandidate(candidate: Candidate): Promise<Candidate> {
-        const existing = await this.candidateRepo.findOne({where:{ Email: candidate.Email}});
-        return await this.candidateRepo.save(candidate);
+        const exist = await this.candidates.find(c=>c.Email===candidate.Email);
+        if(exist){
+            throw new NotFoundException(`Candidate with email ${candidate.Email} already exists`);
+        }
+        candidate.CandidateId= this.candidates.length+1;
+        this.candidates.push(candidate);
+        return candidate; 
     }
     async deleteCandidate(id: number): Promise<void> {
-        const resutl = await this.candidateRepo.delete(id);
-        if(resutl.affected === 0){
-        throw new NotFoundException('Candidate not found');
+        const resutl = await this.candidates.findIndex(c=>c.CandidateId===id);
+        if (resutl === -1) {
+            throw new NotFoundException(`Candidate with id ${id} not found`);
         }
+        this.candidates.splice(resutl, 1);
     }
-    
 }
+
