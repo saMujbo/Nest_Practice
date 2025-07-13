@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { OfferSkill } from './OfferSkills.entity';
+import { Candiateoffer } from './CandidateOffer.entity';
+import { CandidateSkill } from './CandidateSkill.entity';
 
 @Entity()
 export class Offer {
@@ -17,4 +19,8 @@ export class Offer {
 
   @OneToMany(() => OfferSkill, (offerSkill) => offerSkill.offer)
   offerSkill?: OfferSkill[];
+
+    candidateOffers?: Candiateoffer[];
+    @OneToMany(() => CandidateSkill, (candidateSkill) => candidateSkill.candidate)
+    candidateSkill?: CandidateSkill[];
 }

@@ -6,6 +6,7 @@ import {
   Column,
 } from 'typeorm';
 import { Candidate } from './Cantidate.entity';
+import { Offer } from './Offer.entity';
 
 @Entity()
 export class Candiateoffer {
@@ -19,4 +20,8 @@ export class Candiateoffer {
   @JoinColumn({ name: 'CandidateId' })
   //@Exclude()
   candidate: Candidate;
+
+  @ManyToOne(() => Offer, offer => offer.candidateOffers)
+  @JoinColumn({ name: 'offerId' })
+  offer: Offer;
 }
