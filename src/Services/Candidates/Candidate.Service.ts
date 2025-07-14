@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { Candidate } from "src/Entities/Cantidate.entity";
 import { Offer } from "src/Entities/Offer.entity";
 import { Skills } from "src/Entities/Skills.entitty";
@@ -30,9 +30,9 @@ export class CandidateService implements ICandidateService{
         return candidate?.candidateSkill?.map(cs=>cs.skill)||[];
     }
     async addCandidate(candidateDto: CreateCandidateDto): Promise<Candidate> {
-    const exist = this.candidates.find(c => c.Email === candidateDto.Email);
+    const exist = await this.candidates.find(c => c.Email === candidateDto.Email);
     if (exist) {
-    throw new NotFoundException(`Candidate with email ${candidateDto.Email} already exists`);
+    throw new ConflictException(`Candidate with email ${candidateDto.Email} already exists`);
     }
 
     const newCandidate: Candidate = {
