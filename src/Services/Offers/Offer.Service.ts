@@ -6,6 +6,7 @@ import { ConflictException } from "@nestjs/common";
 import { Skills } from "src/Entities/Skills.entitty";
 
 export class OfferSerice implements IOfferService{
+
     private offer : Offer[] = [];
     private candidate : Candidate[]=[];
 
@@ -51,6 +52,11 @@ export class OfferSerice implements IOfferService{
         this.offer[offerIndex]=  updateOffer;
         return updateOffer;
     }
-
-    
+    async DeleteOffer(id: number): Promise<void> {
+        const result = await this.offer.findIndex(of=>of.OfferId===id);
+        if(result===-1){
+            throw new ConflictException(`Offer with id ${id} is not found`);
+        }
+        this.offer.splice(result,1);
+    }
 }

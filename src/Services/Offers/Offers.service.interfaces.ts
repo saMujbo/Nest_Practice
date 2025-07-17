@@ -7,4 +7,5 @@ export interface IOfferService{
     GetOfferById(id:number):Promise<Offer>
     AddOffer(Offerdto:CreateOfferDto):Promise<Offer>
     UptadeOffer(id:number,Offer:CreateOfferDto):Promise<Offer>
+    DeleteOffer(id:number):Promise<void>
 }
