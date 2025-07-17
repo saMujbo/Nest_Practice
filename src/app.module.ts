@@ -8,7 +8,7 @@ import { OfferController } from './Controller/Offer.controller';
 import { SkillsService } from './Services/Skills/Skills.service';
 import { OfferSerice } from './Services/Offers/Offer.Service';
 
-// agrega aquí otros módulos que vayas creando
+
 
 @Module({
   controllers: [CandidateController,

@@ -20,4 +20,5 @@ export class CretaeCompanyDto{
         @ApiProperty()
         @IsString()
         Password:string;
+    OfferId: any;
     }
