@@ -23,4 +23,5 @@ export class Offer {
     candidateOffers?: Candiateoffer[];
     @OneToMany(() => CandidateSkill, (candidateSkill) => candidateSkill.candidate)
     candidateSkill?: CandidateSkill[];
+    id: any;
 }

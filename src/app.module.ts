@@ -7,6 +7,12 @@ import { SkillsController } from './Controller/Skill.controller';
 import { OfferController } from './Controller/Offer.controller';
 import { SkillsService } from './Services/Skills/Skills.service';
 import { OfferSerice } from './Services/Offers/Offer.Service';
+import { CandidateOfferController } from './Controller/CandidateOffer.controller';
+import { CandidateOfferService } from './Services/CandidateOffer/CandidateOffer.Service';
+import { CandidateSkillController } from './Controller/CandidateSkill.controller';
+import { CandidateSkillService } from './Services/CandidateSkill/CandidateSkill.Service';
+import { OfferSkillController } from './Controller/OfferSkill.controller';
+import { OfferSkillService } from './Services/OfferSkills/OfferSkill.Service';
 
 
 
@@ -14,10 +20,18 @@ import { OfferSerice } from './Services/Offers/Offer.Service';
   controllers: [CandidateController,
                 CompanyController,
                 SkillsController,
-                OfferController],
+                OfferController,
+                CandidateOfferController,
+                CandidateSkillController,
+                OfferSkillController
+              ],
   providers: [CandidateService,
               SkillsService,
               OfferSerice,
-              CompanyService],
+              CandidateOfferService,
+              CandidateSkillService,
+              CompanyService,
+              OfferSkillService
+            ],
 })
 export class AppModule {}

@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { CreateCandidateDto } from "src/Dtos/Candidates.dto";
+import { CretaeCompanyDto } from "src/Dtos/Company.dto";
+
 import { Company } from "src/Entities/Company.entity";
 import { CompanyService } from "src/Services/Company/Company.Service";
 
@@ -19,7 +21,7 @@ export class CompanyController{
     }
 
     @Post()
-    addCompany(@Body()company:CreateCandidateDto): Promise<Company>{
+    addCompany(@Body()company:CretaeCompanyDto): Promise<Company>{
         return this.companyService.Addcompany(company);
     }
 
@@ -31,7 +33,7 @@ export class CompanyController{
     @Put('/:id')
     UpdateCompany(
     @Param('id',ParseIntPipe)id:number,
-    @Body()companyDto:CreateCandidateDto
+    @Body()companyDto:CretaeCompanyDto
     ): Promise<Company>{
         return this.companyService.UpdateCompany(id,companyDto);
     }

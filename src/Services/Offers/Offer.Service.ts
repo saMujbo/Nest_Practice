@@ -31,14 +31,17 @@ export class OfferSerice implements IOfferService{
         }
         return result;
     }
+
     AddOffer(Offerdto: CreateOfferDto): Promise<Offer> {
-        const newoffer: Skills={
-            SkillId: this.offer.length+1,
-            ...Offerdto,
-        };
-        this.offer.push(newoffer);
-        return Promise.resolve(newoffer);
-    }
+    const newoffer: Offer = {
+        id: this.offer.length + 1, // o el campo correcto si no es 'id'
+        ...Offerdto,
+    };
+
+    this.offer.push(newoffer);
+    return Promise.resolve(newoffer);
+}
+
     async UptadeOffer(id: number, Offer: CreateOfferDto): Promise<Offer> {
         const offerIndex= await this.offer.findIndex(of=>of.OfferId===id);
         if(offerIndex===-1){

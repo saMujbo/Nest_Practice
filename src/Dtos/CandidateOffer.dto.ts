@@ -6,4 +6,8 @@ export class CandidateOfferDto{
     @ApiProperty()
     @IsNumber()
     CandidateId:number;
+
+    @ApiProperty()
+    @IsNumber()
+    OfferId:number;
 }

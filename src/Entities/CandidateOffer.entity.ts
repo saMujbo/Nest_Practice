@@ -16,6 +16,9 @@ export class Candiateoffer {
   @Column()
   CandidateId: number;
 
+  @Column()
+  OfferId:number;
+
   @ManyToOne(() => Candidate, (candidate) => candidate.candidateOffers)
   @JoinColumn({ name: 'CandidateId' })
   //@Exclude()
