@@ -1,4 +1,5 @@
 import {Body,Controller,Delete,Get,Param,ParseIntPipe,Post, Put,} from '@nestjs/common';
+import { CreateofferSkillDto } from 'src/Dtos/OfferSkill.dto';
 import { OfferSkill } from 'src/Entities/OfferSkills.entity';
 import { OfferSkillService } from 'src/Services/OfferSkills/OfferSkill.Service';
 
@@ -7,29 +8,36 @@ export class OfferSkillController {constructor(private readonly offerSkillServic
 
     @Get()
     getAllOfferSkills(): Promise<OfferSkill[]> {
-    return this.offerSkillService.getAllOfferSkills();
+    return this.offerSkillService.GetAllOfferSkills();
     }
 
     @Get(':id')
-    getOfferSkillById(@Param('id', ParseIntPipe) id: number): Promise<OfferSkill> {
-    return this.offerSkillService.getOfferSkillById(id);
+    getOfferSkillById(@Param('offerid', ParseIntPipe) offerid: number,
+    @Param('skillId',ParseIntPipe)skillId:number
+): Promise<OfferSkill> {
+    return this.offerSkillService.GetOfferSkillById(offerid,skillId);
     }
 
     @Post()
-    addOfferSkill(@Body() offerSkill: OfferSkill): Promise<OfferSkill> {
-    return this.offerSkillService.addOfferSkill(offerSkill);
+    addOfferSkill(@Body() offerSkill: CreateofferSkillDto): Promise<OfferSkill> {
+    return this.offerSkillService.AddOfferSkill(offerSkill);
     }
 
     @Put(':id')
     updateOfferSkill(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() offerSkill: OfferSkill,
+    @Param('offerId', ParseIntPipe) offerId: number,
+    @Param('skillId', ParseIntPipe) skillId: number,
+    @Body() offerSkill: CreateofferSkillDto,
     ): Promise<OfferSkill> {
-    return this.offerSkillService.updateOfferSkill(id, offerSkill);
+    return this.offerSkillService.UpdateOfferSkill(offerId,skillId, offerSkill);
     }
 
     @Delete(':id')
-    deleteOfferSkill(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.offerSkillService.deleteOfferSkill(id);
+    deleteOfferSkill(
+    @Param('offerId', ParseIntPipe) offerId: number,
+    @Param('skillId', ParseIntPipe) skillId: number,
+
+): Promise<void> {
+    return this.offerSkillService.DeleteOfferSkill(offerId,skillId);
     }
 }

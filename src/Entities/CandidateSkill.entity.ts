@@ -14,8 +14,11 @@ export class CandidateSkill {
   id: number;
 
   @Column({ nullable: true })
-  CanidateId?: number;
+  CandidateId?: number;
 
+  @Column({nullable:true})
+  SkillId?:number;
+  
   @ManyToOne(() => Candidate, (candidate) => candidate.candidateSkill)
   @JoinColumn({ name: 'CandidateId' })
   candidate: Candidate;

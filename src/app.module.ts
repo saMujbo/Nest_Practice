@@ -13,6 +13,9 @@ import { CandidateSkillController } from './Controller/CandidateSkill.controller
 import { CandidateSkillService } from './Services/CandidateSkill/CandidateSkill.Service';
 import { OfferSkillController } from './Controller/OfferSkill.controller';
 import { OfferSkillService } from './Services/OfferSkills/OfferSkill.Service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CandidateSkill } from './Entities/CandidateSkill.entity';
+import { OfferSkill } from './Entities/OfferSkills.entity';
 
 
 

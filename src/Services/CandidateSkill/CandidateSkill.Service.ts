@@ -1,55 +1,72 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateCandidateSkillDto } from 'src/Dtos/CandidateSkill.dto';
 import { CandidateSkill } from 'src/Entities/CandidateSkill.entity';
+import { ICandidateSkillService } from './CandidateSkill.service.interfaces';
+import { Skills } from 'src/Entities/Skills.entitty';
+import { Candidate } from 'src/Entities/Cantidate.entity';
 
 @Injectable()
-export class CandidateSkillService {
-    constructor(
-    @InjectRepository(CandidateSkill)
-    private readonly candidateSkillRepo: Repository<CandidateSkill>,
-    ) {}
+export class CandidateSkillService implements ICandidateSkillService {
+    private candidateSkills: CandidateSkill[] = [];
 
-    async addCandidateSkill(candidateSkill: CandidateSkill): Promise<CandidateSkill> {
-    return await this.candidateSkillRepo.save(candidateSkill);
+    async AddCandidateSkill(dto: CreateCandidateSkillDto): Promise<CandidateSkill> {
+    const exists = this.candidateSkills.find(
+    cs => cs.CandidateId === dto.CandidateId && cs.SkillId === dto.SkillId,
+    );
+
+    if (exists) {
+    throw new ConflictException('CandidateSkill already exists');
     }
 
-    async deleteCandidateSkill(candidateSkill: CandidateSkill): Promise<void> {
-    const existing = await this.candidateSkillRepo.findOne({
-    where: {
-        CanidateId: candidateSkill.CanidateId,
-        skill: candidateSkill.skill, 
-    },
-    relations: ['skill'],
-    });
+    const newCandidateSkill: CandidateSkill = {
+        id: this.candidateSkills.length + 1,
+        CandidateId: dto.CandidateId,
+        SkillId: dto.SkillId,
+        candidate: new Candidate,
+        skill: new Skills
+    };
 
-    if (!existing) {
-    throw new NotFoundException('CandidateSkill not found');
+    this.candidateSkills.push(newCandidateSkill);
+    return newCandidateSkill;
     }
 
-    await this.candidateSkillRepo.remove(existing);
+    async DeleteCandidateSkill(id: number): Promise<void> {
+    const index = this.candidateSkills.findIndex(cs => cs.id === id);
+
+    if (index === -1) {
+    throw new NotFoundException(`CandidateSkill with id ${id} not found`);
     }
 
-    async getAllCandidateSkills(): Promise<CandidateSkill[]> {
-    return await this.candidateSkillRepo.find({ relations: ['candidate', 'skill'] });
+    this.candidateSkills.splice(index, 1);
     }
 
-    async getCandidateSkillById(id: number): Promise<CandidateSkill> {
-    const skill = await this.candidateSkillRepo.findOne({ where: { id }, relations: ['candidate', 'skill'] });
+    async GetAllCandidateSkills(): Promise<CandidateSkill[]> {
+    return this.candidateSkills;
+    }
+
+    async GetCandidateSkillById(id: number): Promise<CandidateSkill> {
+    const skill = this.candidateSkills.find(cs => cs.id === id);
+
     if (!skill) {
-    throw new NotFoundException('CandidateSkill not found');
+    throw new NotFoundException(`CandidateSkill with id ${id} not found`);
     }
+
     return skill;
     }
 
-    async updateCandidateSkill(id: number, candidateSkill: CandidateSkill): Promise<CandidateSkill> {
-    const existing = await this.candidateSkillRepo.findOne({ where: { id } });
+    async UpdateCandidateSkill(id: number, dto: CreateCandidateSkillDto): Promise<CandidateSkill> {
+    const index = this.candidateSkills.findIndex(cs => cs.id === id);
 
-    if (!existing) {
-    throw new NotFoundException('CandidateSkill not found');
+    if (index === -1) {
+    throw new NotFoundException(`CandidateSkill with id ${id} not found`);
     }
 
-    const updated = this.candidateSkillRepo.merge(existing, candidateSkill);
-    return await this.candidateSkillRepo.save(updated);
+    const updated: CandidateSkill = {
+    ...this.candidateSkills[index],
+    ...dto,
+    };
+
+    this.candidateSkills[index] = updated;
+    return updated;
     }
 }

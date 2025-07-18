@@ -1,56 +1,72 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { IOfferSkillService } from './OfferSkill.service.interfaces';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { OfferSkill } from 'src/Entities/OfferSkills.entity';
+import { IOfferSkillService } from './OfferSkill.service.interfaces';
+import { CreateofferSkillDto } from 'src/Dtos/OfferSkill.dto';
 
 
 @Injectable()
 export class OfferSkillService implements IOfferSkillService {
-    constructor(
-    @InjectRepository(OfferSkill)
-    private readonly offerSkillRepo: Repository<OfferSkill>,
-    ) {}
+    private offerSkills: OfferSkill[] = [];
 
-    async getAllOfferSkills(): Promise<OfferSkill[]> {
-    return await this.offerSkillRepo.find({ relations: ['offer', 'skill'] });
+    async AddOfferSkill(dto: CreateofferSkillDto): Promise<OfferSkill> {
+    const exists = this.offerSkills.find(
+        os => os.OfferId === dto.OfferId && os.SkillId === dto.SkillId,
+    );
+    if (exists) {
+        throw new ConflictException(
+        `OfferSkill with OfferId ${dto.OfferId} and SkillId ${dto.SkillId} already exists`,
+        );
     }
 
-    async getOfferSkillById(id: number): Promise<OfferSkill> {
-    const offerSkill = await this.offerSkillRepo.findOne({
-    where: {
-    OfferId: id,    
-    SkillId: id,    
-    },
-    relations: ['offer', 'skill'],
-});
+    const newOfferSkill: OfferSkill = {
+        OfferId: dto.OfferId,
+        SkillId: dto.SkillId,
+        Id: 0,
+    };
 
-    if (!offerSkill) {
-    throw new NotFoundException('OfferSkill not found');
-    }
-    return offerSkill;
-}
-
-    async addOfferSkill(offerSkill: OfferSkill): Promise<OfferSkill> {
-    return await this.offerSkillRepo.save(offerSkill);
-}
-
-    async updateOfferSkill(id: number, offerSkill: OfferSkill): Promise<OfferSkill> {
-    const existing = await this.offerSkillRepo.findOneBy({ OfferId: id });
-
-    if (!existing) {
-    throw new NotFoundException('OfferSkill not found');
-    }
-    Object.assign(existing, offerSkill);
-    return await this.offerSkillRepo.save(existing);
+    this.offerSkills.push(newOfferSkill);
+    return newOfferSkill;
     }
 
-    async deleteOfferSkill(id: number): Promise<void> {
-    const existing = await this.offerSkillRepo.findOneBy({ OfferId: id });
-
-    if (!existing) {
-    throw new NotFoundException('OfferSkill not found');
+    async GetAllOfferSkills(): Promise<OfferSkill[]> {
+    return this.offerSkills;
     }
-    await this.offerSkillRepo.remove(existing);
+
+    async GetOfferSkillById(offerId: number, skillId: number): Promise<OfferSkill> {
+    const found = this.offerSkills.find(
+        os => os.OfferId === offerId && os.SkillId === skillId,
+    );
+    if (!found) {
+        throw new NotFoundException(`OfferSkill with OfferId ${offerId} and SkillId ${skillId} not found`);
+    }
+    return found;
+    }
+
+    async UpdateOfferSkill(offerId: number, skillId: number, dto:CreateofferSkillDto): Promise<OfferSkill> {
+    const index = this.offerSkills.findIndex(
+        os => os.OfferId === offerId && os.SkillId === skillId,
+    );
+    if (index === -1) {
+        throw new NotFoundException(`OfferSkill with OfferId ${offerId} and SkillId ${skillId} not found`);
+    }
+
+    const updated: OfferSkill = {
+        OfferId: dto.OfferId,
+        SkillId: dto.SkillId,
+        Id: 0
+    };
+
+    this.offerSkills[index] = updated;
+    return updated;
+    }
+
+    async DeleteOfferSkill(offerId: number, skillId: number): Promise<void> {
+    const index = this.offerSkills.findIndex( os => os.OfferId === offerId && os.SkillId === skillId,
+    );
+    if (index === -1) {
+    throw new NotFoundException(`OfferSkill with OfferId ${offerId} and SkillId ${skillId} not found`);
+    }
+
+    this.offerSkills.splice(index, 1);
     }
 }

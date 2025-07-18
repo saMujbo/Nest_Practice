@@ -1,9 +1,10 @@
+import { CreateCandidateSkillDto } from "src/Dtos/CandidateSkill.dto";
 import { CandidateSkill } from "src/Entities/CandidateSkill.entity";
 
 export interface ICandidateSkillService {
-    addCandidateSkill(candidateSkill: CandidateSkill): Promise<CandidateSkill>;
-    deleteCandidateSkill(candidateSkill: CandidateSkill): Promise<void>;
-    getAllCandidateSkills(): Promise<CandidateSkill[]>;
-    getCandidateSkillById(id: number): Promise<CandidateSkill>;
-    updateCandidateSkill(id: number, candidateSkill: CandidateSkill): Promise<CandidateSkill>;
+    AddCandidateSkill(candidateSkill: CreateCandidateSkillDto): Promise<CandidateSkill>;
+    DeleteCandidateSkill(id:number): Promise<void>;
+    GetAllCandidateSkills(): Promise<CandidateSkill[]>;
+    GetCandidateSkillById(id: number): Promise<CandidateSkill>;
+    UpdateCandidateSkill(id: number, candidateSkill: CreateCandidateSkillDto): Promise<CandidateSkill>;
 }

@@ -9,28 +9,28 @@ export class CandidateSkillController {
 
     @Get()
     getAllCandidateSkills(): Promise<CandidateSkill[]> {
-    return this.candidateSkillService.getAllCandidateSkills();
+    return this.candidateSkillService.GetAllCandidateSkills();
     }
 
     @Get(':id')
     getCandidateSkillById(
     @Param('id', ParseIntPipe) id: number,
     ): Promise<CandidateSkill> {
-    return this.candidateSkillService.getCandidateSkillById(id);
+    return this.candidateSkillService.GetCandidateSkillById(id);
     }
 
     @Post()
     addCandidateSkill(
     @Body() candidateSkill: CandidateSkill,
     ): Promise<CandidateSkill> {
-    return this.candidateSkillService.addCandidateSkill(candidateSkill);
+    return this.candidateSkillService.AddCandidateSkill(candidateSkill);
     }
 
     @Delete()
     deleteCandidateSkill(
-    @Body() candidateSkill: CandidateSkill,
+    @Body() id:number,
     ): Promise<void> {
-    return this.candidateSkillService.deleteCandidateSkill(candidateSkill);
+    return this.candidateSkillService.DeleteCandidateSkill(id);
     }
 
     @Put(':id')
@@ -38,6 +38,6 @@ export class CandidateSkillController {
     @Param('id', ParseIntPipe) id: number,
     @Body() candidateSkill: CandidateSkill,
     ): Promise<CandidateSkill> {
-    return this.candidateSkillService.updateCandidateSkill(id, candidateSkill);
+    return this.candidateSkillService.UpdateCandidateSkill(id, candidateSkill);
     }
 }

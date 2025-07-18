@@ -3,7 +3,7 @@ import { Offer } from "src/Entities/Offer.entity";
 import { IOfferService } from "./Offers.service.interfaces";
 import { Candidate } from "src/Entities/Cantidate.entity";
 import { ConflictException } from "@nestjs/common";
-import { Skills } from "src/Entities/Skills.entitty";
+
 
 export class OfferSerice implements IOfferService{
 
@@ -18,7 +18,7 @@ export class OfferSerice implements IOfferService{
     if(!candiate){
         throw new ConflictException(`Candidate with id ${id} not found`);
     }
-    const candiateSkillsIds= candiate.candidateSkill?.map(cs=>cs.CanidateId); 
+    const candiateSkillsIds= candiate.candidateSkill?.map(cs=>cs.CandidateId); 
 
     const offers = this.offer.filter(o=>o.offerSkill?.some(os=>candiateSkillsIds?.includes(os.SkillId))
     );
@@ -36,6 +36,7 @@ export class OfferSerice implements IOfferService{
     const newoffer: Offer = {
         id: this.offer.length + 1, // o el campo correcto si no es 'id'
         ...Offerdto,
+        CompanyId: Offerdto.CompanyId,
     };
 
     this.offer.push(newoffer);

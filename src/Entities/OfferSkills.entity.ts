@@ -18,12 +18,12 @@ export class OfferSkill {
 
   @ManyToOne(() => Offer, (offer) => offer.offerSkill)
   @JoinColumn({ name: 'Offerid' })
-  offer: Offer;
+  offer?: Offer;
 
   @Column({ nullable: true })
   SkillId: number;
 
   @ManyToOne(() => Skills, (skill) => skill.offerSkills)
   @JoinColumn({ name: 'skillId' })
-  skill: Skills;
+  skill?: Skills;
 }

@@ -1,10 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 
 export class CreateOfferDto{
     @ApiProperty()
-    CompanyId:string
+    @IsNumber()
+    CompanyId:number;
 
     @ApiProperty()
     @IsString()
